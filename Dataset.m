@@ -14,6 +14,9 @@ classdef Dataset < LFADS.Dataset
 
         function loadInfo(ds, reload)
             % Load this Dataset's metadata if not already loaded
+            if ds.infoLoaded
+                return;
+            end
 
             if nargin < 2
                 reload = false;
