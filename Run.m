@@ -42,7 +42,6 @@ classdef Run < LFADS.Run
             %   vector of unique integers.
 
             data = dataset.loadData();
-
             spikes = [];
             sizeOfData=size(data);
             disp('Iterating over all trials');
@@ -53,11 +52,26 @@ classdef Run < LFADS.Run
                 trial = data(i);
                 spikes(i) = [trial.TrialData.spikes];
             end
-            
             disp('Assigning Spikes');
+            % (required)- A tensor of binned spike counts (not rates)
+            % with size nTrials x nChannels x nTime.
+            % These should be total counts, not normalized rates,
+            % as they will be added together during re-binning.
             out.counts = spikes;
+            % (required)- (Optional):
+            % A vector of timepoints with length nTime in
+            % milliseconds associated with each time bin in counts.
+            % You can start this wherever you like, but timeVecMs(2) - timeVecMs(1)
+            % will be treated as the raw spike bin width used when the data are later
+            % rebinned to match r.params.spikeBinMs. Default is 1:size(counts, 3).
             out.timeVecMs = 10;
+            % (Optional):
+            %     Vector with length nTrials identifying the condition to which each 
+            % trial belongs. This can either be a cell array of strings 
+            % or a numeric vector. Default is [].
             out.conditionId = [];
+            % For synthetic datasets, provides the ground-truth counts for each trial. 
+            % Same size as .counts. Default is [].
             out.truth = [];
         end
     end

@@ -3,7 +3,7 @@
 %% Generate synthetic Lorenz datasets
 
 % build the dataset collection
-datasetPath = '~/lorenz_example/datasets';
+datasetPath = './lorenz_example/datasets';
 
 % generate demo datasets
 if ~exist(fullfile(datasetPath, 'dataset001.mat'), 'file')
