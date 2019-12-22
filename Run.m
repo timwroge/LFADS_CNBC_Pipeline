@@ -43,10 +43,22 @@ classdef Run < LFADS.Run
 
             data = dataset.loadData();
 
-            out.counts = data.spikes;
-            out.timeVecMs = data.timeMs;
-            out.conditionId = data.conditionId;
-            out.truth = data.true_rates;
+            spikes = [];
+            sizeOfData=size(data);
+            disp('Iterating over all trials');
+            for i=1:sizeOfData(2)
+                if(mod(i, 100)==0) 
+                    disp("On: "); disp(i); 
+                end
+                trial = data(i);
+                spikes(i) = [trial.TrialData.spikes];
+            end
+            
+            disp('Assigning Spikes');
+            out.counts = spikes;
+            out.timeVecMs = 10;
+            out.conditionId = [];
+            out.truth = [];
         end
     end
 end
