@@ -1,12 +1,13 @@
 % Identify the datasets you'll be using
 % Here we'll add one at ~/lorenz_example/datasets/dataset001.mat
-dc = CNBCPipeline.DatasetCollection('~/Documents/LFADS/generic-pipeline-example/datasets');
+[full_file_path, ~, ~] = fileparts(mfilename('fullpath'))
+dc = CNBCPipeline.DatasetCollection(strcat(full_file_path, 'experiment/data'));
 dc.name = 'generic-pipeline-example';
 ds = CNBCPipeline.Dataset(dc, 'Nelson20160111handControl_translated20171215'); % adds this dataset to the collection
 dc.loadInfo; % loads dataset metadata
 
 % Run a single model for each dataset, and one stitched run with all datasets
-runRoot = '~/Documents/LFADS/generic-pipeline-example/runs';
+runRoot = strcat(full_file_path, 'experiment/runs');
 rc = CNBCPipeline.RunCollection(runRoot, 'example', dc);
 
 % run files will live at ~/lorenz_example/runs/example/
@@ -24,7 +25,7 @@ rc.addParams(parSet);
 
 
 % Setup which datasets are included in each run, here just the one
-runName = dc.datasets(1).getSingleRunName(); % == 'single_dataset001'
+runName = dc.datasets(1).getSingleRunName();
 rc.addRunSpec(CNBCPipeline.RunSpec(runName, dc, 1));
 
 % Generate files needed for LFADS input on disk
