@@ -62,7 +62,7 @@ done
 
 if [ $(which run_lfads.py) ]
 then
-    print_status "LFADS is already installed in the default path"
+    print_status "LFADS is installed in the default path"
     print_status "Everything is successfully installed!"
 else
     if [ -d models ]
