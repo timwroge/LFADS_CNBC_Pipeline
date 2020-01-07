@@ -1,0 +1,78 @@
+#!/bin/bash
+# this file is designed to install the dependencies in order to run the lfads directory
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+END='\033[0m' # No Color
+
+# exit on error
+set -e
+
+function print_error {
+    echo -e "${RED} $1 ${END}"
+}
+function print_status {
+    echo -e "${GREEN} $1 ${END}"
+}
+
+function apt_install {
+    print_status "Installing $1 using apt"
+    sudo apt-get install $1
+}
+
+function pip_install {
+    print_status "Installing $1 using pip"
+    pip install --user $1
+}
+
+function get_conda {
+    print_status "Getting conda install script"
+    wget https://repo.anaconda.com/archive/Anaconda2-2019.10-Linux-x86_64.sh
+}
+
+apt_dependencies="tmux"
+pip_dependencies="h5py matplotlib"
+
+print_status "Installing the proper dependencies and paths for CNBC LFADS Pipeline\n"
+
+if [ $(which conda) ]
+then
+    echo "Conda is installed"
+else
+    get_conda
+    chmod +x Anaconda2-2019.10-Linux-x86_64.sh
+    print_status "Please follow these directions to install conda... running conda script"
+    ( ./Anaconda2-2019.10-Linux-x86_64.sh )
+fi
+
+
+print_status "Generating conda tensorflow environment"
+conda create --name tensorflow python=2.7 tensorflow-gpu
+print_status "tensorflow environment successfully installed"
+
+print_status "Installing apt dependencies using sudo"
+for dependency in $apt_dependencies; do
+    apt_install $dependency
+done
+
+print_status "Installing pip dependencies for user $USER"
+for dependency in $pip_dependencies; do
+    pip_install $dependency
+done
+
+
+if [ $(which run_lfads.py) ]
+then
+    print_status "LFADS is already installed in the default path"
+    print_status "Everything is successfully installed!"
+else
+    if [ -d models ]
+    then
+        print_status "The lfads path is being added now"
+        echo "export PATH=\$PATH:$PWD/models/research/lfads" >> ~/.bashrc
+    else
+        print_error "The repo was not pulled recursively"
+        print_status "The submodules are being added now"
+        git submodule update --init
+        echo "export PATH=\$PATH:$PWD/models/research/lfads" >> ~/.bashrc
+    fi
+fi
