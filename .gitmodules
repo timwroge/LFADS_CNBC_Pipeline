@@ -1,0 +1,3 @@
+[submodule "lfads-run-manager"]
+	path = lfads-run-manager
+	url = https://github.com/lfads/lfads-run-manager.git
