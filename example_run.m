@@ -1,13 +1,13 @@
 % Identify the datasets you'll be using
 % Here we'll add one at ~/lorenz_example/datasets/dataset001.mat
 [full_file_path, ~, ~] = fileparts(mfilename('fullpath'))
-dc = CNBCPipeline.DatasetCollection(strcat(full_file_path, 'experiment/data'));
+dc = CNBCPipeline.DatasetCollection(strcat(full_file_path, '/experiment/data/datasets/'));
 dc.name = 'generic-pipeline-example';
 ds = CNBCPipeline.Dataset(dc, 'Nelson20160111handControl_translated20171215'); % adds this dataset to the collection
 dc.loadInfo; % loads dataset metadata
 
 % Run a single model for each dataset, and one stitched run with all datasets
-runRoot = strcat(full_file_path, 'experiment/runs');
+runRoot = strcat(full_file_path, '/experiment/runs');
 rc = CNBCPipeline.RunCollection(runRoot, 'example', dc);
 
 % run files will live at ~/lorenz_example/runs/example/
