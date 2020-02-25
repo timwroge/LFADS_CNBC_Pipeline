@@ -92,13 +92,34 @@ end
 
 colorMapping=jet(numTaskConditions);
 
+%flatten the factors to generate a retangular matrix
+% where the rows are the trials and the columns are the factors
+factor_observations = [];
+
 
 for i = 1:numTaskConditions
     for j = 1:numTrials
         if(taskAngles(i) == taskConditions(j))
-            factor_x = factors(1, withinReach(j, :) , j);
-            factor_y = factors(2, withinReach(j, :) , j);
-            factor_z = factors(3, withinReach(j, :) , j);
+            trial_observations = factors(:, withinReach(j, :) , j)';
+            if(~isempty(factor_observations) )
+                factor_observations  = [factor_observations;trial_observations];
+            else
+                factor_observations = trial_observations;
+            end
+         end
+     end
+end
+[coeff, score, latent]  = ppca(factor_observations, 3);
+current_index = 1
+
+for i = 1:numTaskConditions
+    for j = 1:numTrials
+        indexes = sum(withinReach(j, :) == 1);
+        if(taskAngles(i) == taskConditions(j))
+            factor_x = score(current_index:(current_index +indexes-1), 1);
+            factor_y = score(current_index:(current_index +indexes-1), 2);
+            factor_z = score(current_index:(current_index +indexes-1), 3);
+            %disp('Making factors' )
             if(~isempty(factor_x)  & ~isempty( factor_y) & ~isempty(factor_z) )
                 %%draw starting points
                 %hold on,scatter3([ factor_x(1)] , [ factor_y(1) ], [ factor_z(1)] ,...
@@ -106,9 +127,11 @@ for i = 1:numTaskConditions
                 %%% %draw end points
                 %hold on,scatter3([ factor_x(end)] , [  factor_y(end)] , [ factor_z(end)] ,...
                 %'*' , 'MarkerFaceColor', colorMapping(i, :) );
+                disp('plotting.... '  )
                 hold on,plot3(factor_x, factor_y, factor_z,...
                      'Color', colorMapping(i, :));
             end
+            current_index = current_index + indexes;
          end
      end
 end
@@ -118,5 +141,5 @@ ylabel('Factor 2');
 zlabel('Factor 3');
 title('Trajectory based on task');
 disp('Saving figure' )
-savefig('hyper_traj_456.fig');
+savefig('hyper_traj_pca.fig');
 disp('Figure saved' )
