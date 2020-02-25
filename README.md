@@ -13,3 +13,7 @@ The code for the matlab instance for the batista lab is given based off this pro
 Just clone this repository into some place like a directory called `+CNBCPipeline` or for a specific
 experiment, `+NelsonHandExperiment`. From there, the run method should be modified to referenece the 
 experiment's specific datasets.
+
+## Install 
+Just run `./install` on a linux machine. After installation make sure to source the bash profile by running:
+`source ~/.bashrc`

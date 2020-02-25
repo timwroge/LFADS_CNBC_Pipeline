@@ -70,7 +70,7 @@ classdef Run < LFADS.Run
             % You can start this wherever you like, but timeVecMs(2) - timeVecMs(1)
             % will be treated as the raw spike bin width used when the data are later
             % rebinned to match r.params.spikeBinMs. Default is 1:size(counts, 3).
-            out.timeVecMs = 0:1:1999;
+            out.timeVecMs = 0:1:1499;
             % (Optional):
             %     Vector with length nTrials identifying the condition to which each 
             % trial belongs. This can either be a cell array of strings
@@ -96,7 +96,7 @@ function outputSpikes = generateMergedSpikes(individulTrial)
     filteredSpikes = spikeData([[spikeData.sort]<31]);
     outputSpikes = [];
     min_time = 0;
-    max_time = 2000;
+    max_time = 1500;
     dt = DT;
     bin_edges = min_time:dt:max_time;
     outputSpikes = zeros(numberOfChannels, size(bin_edges, 2)-1);

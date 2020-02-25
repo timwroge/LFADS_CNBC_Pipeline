@@ -8,7 +8,7 @@ dc.loadInfo; % loads dataset metadata
 
 % Run a single model for each dataset, and one stitched run with all datasets
 runRoot = strcat(full_file_path, '/experiment/runs');
-rc = CNBCPipeline.RunCollection(runRoot, 'example', dc);
+rc = CNBCPipeline.RunCollection(runRoot, 'hyperparametertuning', dc);
 
 % run files will live at ~/lorenz_example/runs/example/
 
@@ -17,12 +17,11 @@ par = CNBCPipeline.RunParams;
 par.spikeBinMs = 2; % rebin the data at 2 ms
 par.c_co_dim = 0; % no controller outputs --> no inputs to generator
 par.c_batch_size = 150; % must be < 1/5 of the min trial count
-par.c_gen_dim = 64; % number of units in generator RNN
-par.c_ic_enc_dim = 64; % number of units in encoder RNN
-par.c_learning_rate_stop = 1e-3; % we can stop really early for the demo
-parSet = par.generateSweep('c_factors_dim', [3 11]);
+par.c_gen_dim = 100; % number of units in generator RNN
+par.c_ic_enc_dim = 100; % number of units in encoder RNN
+par.c_learning_rate_stop = 1e-6; % we can stop really early for the demo
+parSet = par.generateSweep('c_factors_dim', [11]);
 rc.addParams(parSet);
-
 
 % Setup which datasets are included in each run, here just the one
 runName = dc.datasets(1).getSingleRunName();

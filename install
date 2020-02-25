@@ -46,7 +46,7 @@ fi
 
 
 print_status "Generating conda tensorflow environment"
-conda create --name tensorflow python=2.7 tensorflow-gpu
+conda create --name tensorflow python=2.7 tensorflow-gpu==1.15
 print_status "tensorflow environment successfully installed"
 
 print_status "Installing apt dependencies using sudo"
@@ -68,11 +68,14 @@ else
     if [ -d models ]
     then
         print_status "The lfads path is being added now"
+        echo "export PATH=\$PATH:$PWD/models/research/lfads"
         echo "export PATH=\$PATH:$PWD/models/research/lfads" >> ~/.bashrc
+        echo "export PYTHONPATH=\$PYTHONPATH:$PWD/models/research/lfads/:$PWD/lfads-run-manager/src" >> ~/.bashrc
     else
         print_error "The repo was not pulled recursively"
         print_status "The submodules are being added now"
         git submodule update --init
         echo "export PATH=\$PATH:$PWD/models/research/lfads" >> ~/.bashrc
+        echo "export PYTHONPATH=\$PYTHONPATH:$PWD/models/research/lfads/:$PWD/lfads-run-manager/src" >> ~/.bashrc
     fi
 fi
